@@ -553,7 +553,11 @@
   <div class="footer-copy">© 2024 Africlass. Tous droits réservés.</div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/browser.min.js"></script>
 <script>
+  // Initialize EmailJS
+  emailjs.init('ltJ_xbEE2E-uX4MCV');
+
   // Intersection Observer for animations
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((e, i) => {
@@ -577,32 +581,43 @@
       return;
     }
 
-    const msg = `🛍️ Nouvelle Commande Africlass!\n\n👤 Nom: ${name}\n📞 Tél: ${phone}\n📍 Ville: ${city}\n👕 Taille: ${size}\n💰 Total: 250 DH\n🚚 Livraison: GRATUITE\n💳 Paiement: À la livraison\n\nMerci!`;
-    const waUrl = `https://wa.me/212600000000?text=${encodeURIComponent(msg)}`;
-    window.open(waUrl, '_blank');
-    // Show success message
-    document.querySelector('.form-wrap').innerHTML = `
-      <div style="text-align:center;padding:2rem 1rem;">
-        <div style="font-size:2.5rem;margin-bottom:1.5rem;">✅</div>
-        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;margin-bottom:1rem;color:var(--cream);">Commande Confirmée!</h3>
-        <p style="font-size:0.85rem;line-height:1.9;color:var(--cream-dim);margin-bottom:1.5rem;">
-          Merci <strong style="color:var(--gold)">${name}</strong>! 🎉<br>
-          Votre commande a été envoyée via WhatsApp.<br>
-          Nous vous contacterons sous 24h pour confirmer la livraison.
-        </p>
-        <div style="border:1px solid rgba(201,169,110,0.2);padding:1.2rem;margin-bottom:1.5rem;text-align:left;">
-          <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.8rem;">Récapitulatif</div>
-          <div style="font-size:0.82rem;line-height:2;color:var(--cream-dim);">
-            👤 ${name}<br>
-            📍 ${city}<br>
-            👕 Taille ${size}<br>
-            💰 250 DH · Paiement à la livraison<br>
-            🚚 <strong style="color:var(--gold)">Livraison Gratuite</strong>
+    // Send email via EmailJS
+    emailjs.send('service_8a8fqub', 'template_rol3nfi', {
+      to_email: 'contact@africlass.com',
+      customer_name: name,
+      customer_phone: phone,
+      customer_city: city,
+      shirt_size: size,
+      total_amount: '250 DH',
+      delivery_note: 'Livraison Gratuite - Paiement à la Livraison'
+    }).then(function(response) {
+      // Show success message
+      document.querySelector('.form-wrap').innerHTML = `
+        <div style="text-align:center;padding:2rem 1rem;">
+          <div style="font-size:2.5rem;margin-bottom:1.5rem;">✅</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;margin-bottom:1rem;color:var(--cream);">Commande Confirmée!</h3>
+          <p style="font-size:0.85rem;line-height:1.9;color:var(--cream-dim);margin-bottom:1.5rem;">
+            Merci <strong style="color:var(--gold)">${name}</strong>! 🎉<br>
+            Votre commande a été reçue avec succès.<br>
+            Nous vous contacterons sous 24h pour confirmer la livraison.
+          </p>
+          <div style="border:1px solid rgba(201,169,110,0.2);padding:1.2rem;margin-bottom:1.5rem;text-align:left;">
+            <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.8rem;">Récapitulatif</div>
+            <div style="font-size:0.82rem;line-height:2;color:var(--cream-dim);">
+              👤 ${name}<br>
+              📍 ${city}<br>
+              👕 Taille ${size}<br>
+              💰 250 DH · Paiement à la livraison<br>
+              🚚 <strong style="color:var(--gold)">Livraison Gratuite</strong>
+            </div>
           </div>
+          <p style="font-size:0.65rem;color:var(--cream-dim);letter-spacing:0.1em;">Un email de confirmation vous a été envoyé.</p>
         </div>
-        <p style="font-size:0.65rem;color:var(--cream-dim);letter-spacing:0.1em;">Si WhatsApp ne s'est pas ouvert, appelez-nous directement.</p>
-      </div>
-    `;
+      `;
+    }).catch(function(error) {
+      alert('Erreur lors de l\'envoi de la commande. Veuillez réessayer.');
+      console.error('EmailJS error:', error);
+    });
   });
 </script>
 </body>
